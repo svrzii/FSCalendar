@@ -321,7 +321,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         CGFloat headerHeight = self.preferredHeaderHeight;
         CGFloat weekdayHeight = self.preferredWeekdayHeight;
         CGFloat rowHeight = self.preferredRowHeight;
-        CGFloat padding = 0;
+		CGFloat padding = self.calendarMainViewInsets.top + self.calendarMainViewInsets.bottom;
         if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
             rowHeight = FSCalendarFloor(rowHeight*2)*0.5; // Round to nearest multiple of 0.5. e.g. (16.8->16.5),(16.2->16.0)
         }
@@ -334,7 +334,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         if (!self.floatingMode) {
             switch (self.transitionCoordinator.representingScope) {
                 case FSCalendarScopeMonth: {
-                    CGFloat contentHeight = rowHeight*6 + padding*2;
+					CGFloat contentHeight = rowHeight*6 + padding;
                     CGFloat currentHeight = rowHeight*[self.calculator numberOfRowsInMonth:self.currentPage] + padding*2;
                     _daysContainer.frame = CGRectMake(0, headerHeight+weekdayHeight, self.fs_width, currentHeight);
                     _collectionView.frame = CGRectMake(0, 0, _daysContainer.fs_width, contentHeight);
@@ -347,7 +347,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
                     break;
                 }
                 case FSCalendarScopeWeek: {
-                    CGFloat contentHeight = rowHeight + padding*2;
+					CGFloat contentHeight = rowHeight + padding;
                     _daysContainer.frame = CGRectMake(0, headerHeight+weekdayHeight, self.fs_width, contentHeight);
                     _collectionView.frame = CGRectMake(0, 0, _daysContainer.fs_width, contentHeight);
                     break;
@@ -885,6 +885,27 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     }
 }
 
+- (void)setTimeZone:(NSTimeZone *)timeZone
+{
+	if (![_timeZone isEqual:timeZone])
+	{
+		_timeZone = timeZone;
+		[self invalidateDateTools];
+		self.today = [self.gregorian dateBySettingHour:0 minute:0 second:0 ofDate:[NSDate date] options:0];
+		self.currentPage = [self.gregorian fs_firstDayOfMonth:self.today];
+	}
+}
+
+- (UIEdgeInsets)calendarMainViewInsets
+{
+	return self.collectionViewLayout.sectionInsets;
+}
+
+- (void)setCalendarMainViewInsets:(UIEdgeInsets)calendarMainViewInsets
+{
+	self.collectionViewLayout.sectionInsets = calendarMainViewInsets;
+}
+
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     _collectionView.allowsMultipleSelection = allowsMultipleSelection;
@@ -992,9 +1013,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         CGFloat headerHeight = self.preferredHeaderHeight;
         CGFloat weekdayHeight = self.preferredWeekdayHeight;
         CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height-headerHeight-weekdayHeight-_scopeHandle.fs_height;
-        CGFloat padding = 0;
-        if (!self.floatingMode) {
-            _preferredRowHeight = (contentHeight-padding*2)/6.0;
+		CGFloat padding = self.calendarMainViewInsets.top + self.calendarMainViewInsets.bottom;
+		if (!self.floatingMode && self.scope != FSCalendarScopeWeek) {
+			_preferredRowHeight = (contentHeight-padding)/6.0;
         } else {
             _preferredRowHeight = _rowHeight;
         }
