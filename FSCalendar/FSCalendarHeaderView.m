@@ -195,11 +195,19 @@
                     text = nil;
                 } else {
                     NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item-1 toDate:self.calendar.minimumDate options:0];
-                    text = [_calendar.formatter stringFromDate:date];
+					NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+					NSInteger month = [components month];
+					NSString *monthName = [[_calendar.formatter standaloneMonthSymbols] objectAtIndex:(month-1)];
+					NSInteger year = [components year];
+					text = [NSString stringWithFormat:@"%@ %ld", monthName, year];
                 }
             } else {
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item toDate:self.calendar.minimumDate options:0];
-                text = [_calendar.formatter stringFromDate:date];
+				NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+				NSInteger month = [components month];
+				NSString *monthName = [[_calendar.formatter standaloneMonthSymbols] objectAtIndex:(month-1)];
+				NSInteger year = [components year];
+				text = [NSString stringWithFormat:@"%@ %ld", monthName, year];
             }
             break;
         }
@@ -209,7 +217,11 @@
             } else {
                 NSDate *firstPage = [self.calendar.gregorian fs_middleDayOfWeek:self.calendar.minimumDate];
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitWeekOfYear value:indexPath.item-1 toDate:firstPage options:0];
-                text = [_calendar.formatter stringFromDate:date];
+				NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+				NSInteger month = [components month];
+				NSString *monthName = [[_calendar.formatter standaloneMonthSymbols] objectAtIndex:(month-1)];
+				NSInteger year = [components year];
+				text = [NSString stringWithFormat:@"%@ %ld", monthName, year];
             }
             break;
         }
