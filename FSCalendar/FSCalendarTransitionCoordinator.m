@@ -535,7 +535,7 @@
                 contentSize = CGSizeMake(self.calendar.fs_width,
                                          self.calendar.preferredHeaderHeight+
                                          self.calendar.preferredWeekdayHeight+
-                                         ([self.calendar.calculator numberOfRowsInMonth:page]*self.calendar.collectionViewLayout.estimatedItemSize.height)+
+                                         ([self.calendar.calculator numberOfRowsInMonth:page]*self.calendar.preferredRowHeight)+
                                          self.calendar.scopeHandle.fs_height+padding);
             }
             break;
@@ -719,6 +719,7 @@
 
 - (void)performPathAnimationWithProgress:(CGFloat)progress
 {
+    if (isnan(progress)) return;
     CGFloat targetHeight = CGRectGetHeight(self.pendingAttributes.targetBounds);
     CGFloat sourceHeight = CGRectGetHeight(self.pendingAttributes.sourceBounds);
     CGFloat currentHeight = sourceHeight - (sourceHeight-targetHeight)*progress - self.calendar.scopeHandle.fs_height;
