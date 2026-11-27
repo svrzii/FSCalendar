@@ -634,6 +634,7 @@
                 }];
                 self.pendingAttributes = nil;
                 self.state = FSCalendarTransitionStateIdle;
+                self.transition = FSCalendarTransitionNone;
             }];
             
             if (self.calendar.delegate && ([self.calendar.delegate respondsToSelector:@selector(calendar:boundingRectWillChange:animated:)] || [self.calendar.delegate respondsToSelector:@selector(calendarCurrentScopeWillChange:animated:)])) {
