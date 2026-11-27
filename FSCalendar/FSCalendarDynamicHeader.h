@@ -33,6 +33,7 @@
 @property (readonly, nonatomic) NSArray *visibleStickyHeaders;
 @property (readonly, nonatomic) CGFloat preferredHeaderHeight;
 @property (readonly, nonatomic) CGFloat preferredWeekdayHeight;
+@property (readonly, nonatomic) CGFloat preferredRowHeight;
 @property (readonly, nonatomic) UIView *bottomBorder;
 
 @property (readonly, nonatomic) NSCalendar *gregorian;
